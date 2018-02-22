@@ -5,6 +5,7 @@ const build = require('./build')
 const api = require('./api')
 const debug = require('./debug')
 const shortener = require('./shortener')
+const transform = require('./transform')
 
 const setBuildStatus = ({
   url,
@@ -32,6 +33,7 @@ const compare = (files, masterValues = {}) => {
   let globalMessage
 
   files.map(file => {
+    file.path = transform(file.path)
     file.master = masterValues[file.path]
     const { path, size, master, maxSize, compression = 'gzip' } = file
 
