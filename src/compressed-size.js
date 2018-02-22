@@ -1,5 +1,5 @@
 const gzip = require('gzip-size')
-const brotli = require('brotli-size')
+const iltorb = require('iltorb')
 
 const getCompressedSize = (data, compression = 'gzip') => {
   let size
@@ -8,7 +8,7 @@ const getCompressedSize = (data, compression = 'gzip') => {
       size = gzip.sync(data)
       break
     case 'brotli':
-      size = brotli.sync(data)
+      size = iltorb.compressSync(new Buffer(data, 'utf8')).length
       break
     case 'none':
     default:
