@@ -5,6 +5,7 @@ const { warn } = require('prettycli')
 
 const token = require('./token')
 const debug = require('./debug')
+const transform = require('./transform')
 
 const url = 'https://bundlesize-store.now.sh/values'
 
@@ -30,7 +31,7 @@ const get = () => {
     .then(response => {
       const values = {}
       if (response && response.data && response.data.length) {
-        response.data.map(file => (values[file.path] = file.size))
+        response.data.map(file => (values[transform(file.path)] = file.size))
       }
       debug('master values', values)
       return values
