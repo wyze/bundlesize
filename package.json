@@ -1,5 +1,5 @@
 {
-  "name": "bundlesize",
+  "name": "@wyze/bundlesize",
   "version": "0.16.0",
   "description": "Keep your library size in check",
   "repository": {
@@ -98,5 +98,8 @@
     "type": "opencollective",
     "url": "https://opencollective.com/bundlesize",
     "logo": "https://opencollective.com/opencollective/logo.txt"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
