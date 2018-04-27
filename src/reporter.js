@@ -1,12 +1,17 @@
 const bytes = require('bytes')
 const { error, warn, info } = require('prettycli')
-const { event, repo, branch, commit_message, sha } = require('ci-env')
+const {
+  event,
+  repo,
+  branch,
+  commit_message: commitMessage,
+  sha
+} = require('ci-env')
 const build = require('./build')
 const api = require('./api')
 const debug = require('./debug')
 const shortener = require('./shortener')
 const transform = require('./transform')
-const assets = require('./webpack-display-names')
 
 const setBuildStatus = ({
   url,
@@ -55,9 +60,13 @@ const getGlobalMessage = ({
     const prettyChange =
       change === 0
         ? 'no change'
-        : change > 0 ? `+${bytes(change)}` : `-${bytes(Math.abs(change))}`
+        : change > 0
+          ? `+${bytes(change)}`
+          : `-${bytes(Math.abs(change))}`
 
-    globalMessage = `${failures} out of ${results.length} bundles are too big! (${prettyChange})`
+    globalMessage = `${failures} out of ${
+      results.length
+    } bundles are too big! (${prettyChange})`
   } else {
     // multiple files, no failures
     const prettySize = bytes(totalSize)
@@ -66,7 +75,9 @@ const getGlobalMessage = ({
     const prettyChange =
       change === 0
         ? 'no change'
-        : change > 0 ? `+${bytes(change)}` : `-${bytes(Math.abs(change))}`
+        : change > 0
+          ? `+${bytes(change)}`
+          : `-${bytes(Math.abs(change))}`
 
     globalMessage = `Total bundle size is ${prettySize}/${prettyMaxSize} (${prettyChange})`
   }
@@ -76,25 +87,16 @@ const getGlobalMessage = ({
 const analyse = ({ files, masterValues }) => {
   return files.map(file => {
     let fail = false
-    file.path = transform(file.path)
+    file.path = transform(file)
     file.master = masterValues[file.path]
-    const {
-      displayName,
-      path,
-      size,
-      master,
-      maxSize,
-      compression = 'gzip'
-    } = file
+    const { path, size, master, maxSize, compression = 'gzip' } = file
 
     let compressionText = '(no compression)'
     if (compression && compression !== 'none') {
       compressionText = `(${compression})`
     }
 
-    const name = displayName || assets[path] || path
-
-    let message = `${name}: ${bytes(size)} `
+    let message = `${path}: ${bytes(size)} `
     if (maxSize === Infinity) {
       message += compressionText
     }
@@ -142,7 +144,7 @@ const analyse = ({ files, masterValues }) => {
 const report = ({ files, globalMessage, fail }) => {
   /* prepare the build page */
   const params = encodeURIComponent(
-    JSON.stringify({ files, repo, branch, commit_message, sha })
+    JSON.stringify({ files, repo, branch, commit_message: commitMessage, sha })
   )
   let url = `https://bundlesize-store.now.sh/build?info=${params}`
 

@@ -31,7 +31,7 @@ const get = () => {
     .then(response => {
       const values = {}
       if (response && response.data && response.data.length) {
-        response.data.map(file => (values[transform(file.path)] = file.size))
+        response.data.map(file => (values[transform(file)] = file.size))
       }
       debug('master values', values)
       return values
