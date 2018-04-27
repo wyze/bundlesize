@@ -6,6 +6,7 @@ const api = require('./api')
 const debug = require('./debug')
 const shortener = require('./shortener')
 const transform = require('./transform')
+const assets = require('./webpack-display-names')
 
 const setBuildStatus = ({
   url,
@@ -77,14 +78,23 @@ const analyse = ({ files, masterValues }) => {
     let fail = false
     file.path = transform(file.path)
     file.master = masterValues[file.path]
-    const { path, size, master, maxSize, compression = 'gzip' } = file
+    const {
+      displayName,
+      path,
+      size,
+      master,
+      maxSize,
+      compression = 'gzip'
+    } = file
 
     let compressionText = '(no compression)'
     if (compression && compression !== 'none') {
       compressionText = `(${compression})`
     }
 
-    let message = `${path}: ${bytes(size)} `
+    const name = displayName || assets[path] || path
+
+    let message = `${name}: ${bytes(size)} `
     if (maxSize === Infinity) {
       message += compressionText
     }
