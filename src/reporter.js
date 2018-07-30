@@ -12,6 +12,7 @@ const api = require('./api')
 const debug = require('./debug')
 const shortener = require('./shortener')
 const transform = require('./transform')
+const { baseBranch } = require('./config')
 
 const setBuildStatus = ({
   url,
@@ -23,7 +24,7 @@ const setBuildStatus = ({
 }) => {
   if (fail) build.fail(globalMessage || 'bundle size > maxSize', url)
   else {
-    if (currentEvent === 'push' && currentBranch === 'master') {
+    if (currentEvent === 'push' && currentBranch === baseBranch) {
       const values = []
       files.map(file => values.push({ path: file.path, size: file.size }))
       api.set(values)
@@ -120,13 +121,15 @@ const analyse = ({ files, masterValues }) => {
       const diff = size - master
 
       if (diff < 0) {
-        message += `(${bytes(Math.abs(diff))} smaller than master, good job!)`
+        message += `(${bytes(
+          Math.abs(diff)
+        )} smaller than ${baseBranch}, good job!)`
         info('PASS', message)
       } else if (diff > 0) {
-        message += `(${bytes(diff)} larger than master, careful!)`
+        message += `(${bytes(diff)} larger than ${baseBranch}, careful!)`
         warn(message)
       } else {
-        message += '(same as master)'
+        message += `(same as ${baseBranch})`
         info('PASS', message)
       }
     }

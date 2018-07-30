@@ -49,21 +49,23 @@
     "prettycli": "^1.4.3",
     "read-pkg-up": "^3.0.0"
   },
-  "bundlesize": [
-    {
-      "path": "./index.js",
-      "maxSize": "600B"
-    },
-    {
-      "path": "./src/files.js",
-      "maxSize": "600B"
-    },
-    {
-      "path": "./src/compressed-size.js",
-      "maxSize": "450B",
-      "compression": "none"
-    }
-  ],
+  "bundlesize": {
+    "files": [
+      {
+        "path": "./index.js",
+        "maxSize": "600B"
+      },
+      {
+        "path": "./src/files.js",
+        "maxSize": "600B"
+      },
+      {
+        "path": "./src/compressed-size.js",
+        "maxSize": "450B",
+        "compression": "none"
+      }
+    ]
+  },
   "lint-staged": {
     "*.js": [
       "eslint --fix",

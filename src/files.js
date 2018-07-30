@@ -7,7 +7,7 @@ const debug = require('./debug')
 const compressedSize = require('./compressed-size')
 const files = []
 
-config.map(file => {
+config.files.map(file => {
   const paths = glob.sync(file.path)
   if (!paths.length) {
     error(`There is no matching file for ${file.path} in ${process.cwd()}`, {
